@@ -1,0 +1,138 @@
+<div class="wrapper">
+  <h1 class="title is-1">Budget Tracker</h1>
+
+  <div class="card" style="width: 420px; margin: 10px">
+    <header class="card-header">
+      <p class="card-header-title">Total Balance</p>
+    </header>
+    <div class="card-content">
+      <div class="content">
+        <p class="balance">{{ "$" + totalBalance }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="expenses">
+    <div class="card" style="width: 200px; margin: 10px">
+      <span><i class="income-icon fas fa-arrow-circle-down"></i></span>
+      <header class="card-header">
+        <p class="card-header-title">Income</p>
+      </header>
+      <div class="card-content">
+        <div class="content">
+          <p class="income">{{ "$" + totalIncome }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="width: 200px; margin: 10px">
+      <span><i class="expense-icon fas fa-arrow-circle-up"></i></span>
+      <header class="card-header">
+        <p class="card-header-title">Expense</p>
+      </header>
+      <div class="card-content">
+        <div class="content">
+          <p class="expense">{{ "$" + totalExpense }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="width: 420px; margin: 10px">
+    <header class="card-header">
+      <p class="card-header-title">Transactions</p>
+    </header>
+    <div class="card-content">
+      <ul class="transaction-list">
+        <!-- <p class="subtitle">No transactions made yet</p> -->
+        <div *ngFor="let budget of transactionList">
+          <li *ngIf="budget.type == 'income' && budget.amount != 0" class="plus">
+            <p>{{ budget.description }}</p>
+            <p>{{ "+$" + budget.amount }}</p>
+          </li>
+
+          <li *ngIf="budget.type == 'expense' && budget.amount != 0" class="minus">
+            <p>{{ budget.description }}</p>
+            <p>{{ "-$" + budget.amount }}</p>
+          </li>
+        </div>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <span (click)="modal = true" class="add-icon transaction-btn"
+    ><i class="fas fa-plus-circle"></i
+  ></span>
+</footer>
+
+<div class="modal" [ngClass]="modal ? 'is-active' : ''">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <div class="modal-card-body">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Add New Transaction</p>
+      </header>
+
+      <form action="" #form="ngForm">
+        <label for="description">Description</label>
+        <input
+          class="input is-primary description"
+          type="text"
+          placeholder="Description"
+          name="description"
+          [(ngModel)]="budget.description"
+          required
+        />
+        <br />
+
+        <label for="amount">Amount</label>
+        <input
+          class="input is-primary amount"
+          type="number"
+          placeholder="Amount"
+          name="amount"
+          required
+          [(ngModel)]="budget.amount"
+        />
+        <br />
+
+        <div class="select is-primary is-medium" style="margin: 10px">
+          <select class="type" name="type" [(ngModel)]="budget.type">
+            <option selected value="income">Income</option>
+            <option value="expense">Expense</option>
+          </select>
+        </div>
+        <br />
+
+        <div class="select is-primary is-medium" style="margin: 10px">
+          <select
+            class="category"
+            name="category"
+            [(ngModel)]="budget.category"
+          >
+            <option selected value="default">Default</option>
+            <option value="lifestyle">Lifestyle</option>
+            <option value="entertainment">Entertainment</option>
+            <option value="transportation">Transportation</option>
+            <option value="food">Food</option>
+            <option value="healthcare">Healthcare</option>
+          </select>
+        </div>
+
+        <footer class="modal-card-foot">
+          <button
+            type="submit"
+            [disabled]="form.invalid"
+            (click)="save()"
+            class="button is-success save"
+          >
+            Save changes
+          </button>
+          <button (click)="modal = false" class="button cancel">Cancel</button>
+        </footer>
+      </form>
+    </div>
+  </div>
+</div>
